@@ -187,7 +187,12 @@ def adder(message):
     cur.execute("insert into students(full_name,course,phone_number) values(%s,%s,%s)", (f_name,course_n,phone))
     conn.commit()
     close_connection(conn,cur)
-    bot.send_message(message.chat.id,"Student added successfuly!")
+    conn = open_connection()
+    cur = conn.cursor()
+    cur.execute(f"select id from students where full_name = '{f_name}'")
+    us = cur.fetchone()
+    close_connection(conn,cur)
+    bot.send_message(message.chat.id,f"Student added successfuly!{us}")
     bot.register_next_step_handler(message,m_handler)
 
 bot.infinity_polling()
